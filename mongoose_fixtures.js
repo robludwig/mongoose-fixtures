@@ -92,18 +92,14 @@ function insertCollection(modelName, data, db, callback) {
         } else {
             tasks.total = items.length;
         }
-        
+
+        var insertObject = function(obj, cb){
+          var doc = new Model(obj);
+          doc.save(cb);
+        }
+
         //Insert each item individually so we get Mongoose validation etc.
-        items.forEach(function(item) {                       
-            var doc = new Model(item);
-            doc.save(function(err) {
-                if (err) return callback(err);
-                
-                //Check if task queue is complete
-                tasks.done++;
-                if (tasks.done == tasks.total) callback();
-            });
-        });
+        async.each(items, insertObject, callback);
     });
 }
 
