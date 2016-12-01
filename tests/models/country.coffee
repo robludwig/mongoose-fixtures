@@ -10,6 +10,9 @@ CountrySchema = new mongoose.Schema(
         type: String,
         require: true,
         trim: true
+    throwError:
+        type: Boolean,
+        default: false
 )
 
 validateCountryCodeSize = (done) ->
@@ -18,6 +21,13 @@ validateCountryCodeSize = (done) ->
     else
         done()
 
+throwOccasionalError = (done) ->
+    if @throwError == true
+      done new Error("throwing forced error")
+    else
+      done()
+
 CountrySchema.pre 'save', validateCountryCodeSize
+CountrySchema.pre 'save', throwOccasionalError
 
 mongoose.model 'Country', CountrySchema

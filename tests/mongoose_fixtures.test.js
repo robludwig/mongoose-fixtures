@@ -56,4 +56,14 @@ describe('mongoose-fixtures test', function(){
             });
         });
     });
+
+    it('should return an error if db insertion throws an error', function(done){
+      var data = require('./fixtures/countries');
+      data.Country[0].throwError = true;
+      fixturesLoader.load(data, function(err){
+        expect(err).to.exist;
+        expect(err).to.not.be.empty;
+        done();
+      })
+    })
 });
