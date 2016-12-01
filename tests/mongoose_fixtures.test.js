@@ -6,27 +6,18 @@ var path = require('path');
 var expect = require('expect.js');
 var mongoose = require('mongoose');
 var fixturesLoader = require('../mongoose_fixtures');
-var MongooseInitializer = require('openifyit-commons').MongooseInitializer;
+var Country = require('./models/country.coffee');
 
 describe('mongoose-fixtures test', function(){
     before(function(done){
-        this.mongooseInitializer = new MongooseInitializer(process.env.MONGODB_URL, path.join(__dirname, './models'));
+        mongoose.connect(process.env.MONGODB_URL, done);
 
-        var functions = [
-            this.mongooseInitializer.openConnection,
-            this.mongooseInitializer.loadModels
-        ];
-        async.series(functions, done);
-    });
-
-    after(function(done){
-        done();
     });
 
     it('should load fixtures from a directory', function(done){
         fixturesLoader.load('./fixtures', function(err){
             expect(err).not.to.be.ok();
-            var CountrySchema = mongoose.connection.model('Country');
+            var CountrySchema = mongoose.model('Country');
             CountrySchema.find({}, function(err, countries){
                 expect(err).not.to.be.ok();
                 expect(countries).to.be.ok();

@@ -1,5 +1,5 @@
 
-ObjectID = require('mongodb').BSONNative.ObjectID
+ObjectID = require('mongoose').Types.ObjectId
 countries = new Array()
 
 country1 =
